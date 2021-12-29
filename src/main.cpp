@@ -1,6 +1,5 @@
 #include <Arduino.h>
 
-
 #include <lmic.h>
 #include <hal/hal.h>
 #include <SPI.h>
@@ -12,7 +11,9 @@
 #define RST     14   // GPIO14 -- SX1278's RESET
 #define DI0     26   // GPIO26 -- SX1278's IRQ(Interrupt Request)
 #define BAND    868E6
-
+// definitation for digital input and output
+#define digitalIn 4
+#define digitalOut 17
 
 //
 // For normal use, we require that you edit the sketch to replace FILLMEIN
@@ -51,7 +52,7 @@ static const u1_t PROGMEM APPKEY[16] = { FILLME };
 
 void os_getDevKey (u1_t* buf) {  memcpy_P(buf, APPKEY, 16);}
 
-static uint8_t mydata[] = "Hello, world!";
+static uint8_t mydata[10]; //data variable 10 bytes long
 static osjob_t sendjob;
 
 // Schedule TX every this many seconds (might become longer due to duty
@@ -204,12 +205,24 @@ void do_send(osjob_t* j){
         Serial.println(F("Packet queued"));
     }
     // Next TX is scheduled after TX_COMPLETE event.
+    mydata = ""; // clear mydata for next transmission
+}
+
+void check_digitalIn(){
+    if (digitalRead(digitalIn) == LOW){
+    	mydata = "DI on";
+    	delay(1000);
+    }
 }
 
 void setup() {
     Serial.begin(115200);
     Serial.println(F("Starting"));
 
+    // define pinmodes for digital in and out
+    pinMode(digitalIn, INPUT_PULLUP);
+    pinMode(digitalOut, OUTPUT);
+	
     #ifdef VCC_ENABLE
     // For Pinoccio Scout boards
     pinMode(VCC_ENABLE, OUTPUT);
@@ -228,4 +241,5 @@ void setup() {
 
 void loop() {
     os_runloop_once();
+    check_digitalIn();
 }
