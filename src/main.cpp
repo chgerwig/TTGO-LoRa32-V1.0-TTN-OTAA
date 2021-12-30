@@ -35,24 +35,24 @@ void do_send(osjob_t* j);
 // first. When copying an EUI from ttnctl output, this means to reverse
 // the bytes. For TTN issued EUIs the last bytes should be 0xD5, 0xB3,
 // 0x70.
-static const u1_t PROGMEM APPEUI[8]= { FILLME };
+static const u1_t PROGMEM APPEUI[8]= { 0xD4, 0x23, 0xDE, 0xC1, 0x1F, 0x24, 0x37, 0x06 };
 
 void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
 
 // This should also be in little endian format, see above.
-static const u1_t PROGMEM DEVEUI[8]={ FILLME };
+static const u1_t PROGMEM DEVEUI[8]={ 0xFF, 0xA8, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
 
 void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
 
 // This key should be in big endian format (or, since it is not really a
 // number but a block of memory, endianness does not really apply). In
 // practice, a key taken from ttnctl can be copied as-is.
-static const u1_t PROGMEM APPKEY[16] = { FILLME };
+static const u1_t PROGMEM APPKEY[16] = { 0x24, 0x1D, 0x7A, 0xF3, 0x74, 0xBE, 0xD9, 0x9A, 0x7B, 0x8C, 0x03, 0xD9, 0xB6, 0xA4, 0xC1, 0x1B };
 
 
 void os_getDevKey (u1_t* buf) {  memcpy_P(buf, APPKEY, 16);}
 
-static uint8_t mydata[10]; //data variable 10 bytes long
+static uint8_t mydata[10] = "Hello"; //data variable 10 bytes long
 static osjob_t sendjob;
 
 // Schedule TX every this many seconds (might become longer due to duty
@@ -205,12 +205,20 @@ void do_send(osjob_t* j){
         Serial.println(F("Packet queued"));
     }
     // Next TX is scheduled after TX_COMPLETE event.
-    mydata = ""; // clear mydata for next transmission
+    /*for (int i = 10; i < 0; i--){
+    //    mydata[i] = ' ';
+    }*/
+ // clear mydata for next transmission
 }
 
 void check_digitalIn(){
     if (digitalRead(digitalIn) == LOW){
-    	mydata = "DI on";
+        Serial.println("Key pressed");
+        mydata[0] = 'D';
+        mydata[0] = 'I';
+        mydata[0] = ' ';
+        mydata[0] = 'o';
+        mydata[0] = 'n';
     	delay(1000);
     }
 }
