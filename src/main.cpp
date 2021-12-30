@@ -215,10 +215,10 @@ void check_digitalIn(){
     if (digitalRead(digitalIn) == LOW){
         Serial.println("Key pressed");
         mydata[0] = 'D';
-        mydata[0] = 'I';
-        mydata[0] = ' ';
-        mydata[0] = 'o';
-        mydata[0] = 'n';
+        mydata[1] = 'I';
+        mydata[2] = ' ';
+        mydata[3] = 'o';
+        mydata[4] = 'n';
     	delay(1000);
     }
 }
