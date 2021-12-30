@@ -205,10 +205,12 @@ void do_send(osjob_t* j){
         Serial.println(F("Packet queued"));
     }
     // Next TX is scheduled after TX_COMPLETE event.
-    /*for (int i = 10; i < 0; i--){
-    //    mydata[i] = ' ';
-    }*/
- // clear mydata for next transmission
+    // clear mydata for next transmission
+    for (int i = 10; i >= 0; i--){
+        mydata[i] = 0;
+    }
+    Serial.print("mydata: ");
+    Serial.println((unsigned)mydata);
 }
 
 void check_digitalIn(){
